@@ -50,3 +50,6 @@ Decoder-only Transformer (GPT-style):
 ## References
 - Eldan & Li (2023), "TinyStories: How Small Can Language Models Be and Still Speak Coherent English?", arXiv:2305.07759
 - Karpathy, nanoGPT (GitHub)
+## Trained Model Checkpoint
+The trained model weights (`slm_checkpoint.pt`) are hosted on Google Drive due to file size:
+[Download checkpoint](paste-your-copied-link-here)
