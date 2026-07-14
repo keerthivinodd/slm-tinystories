@@ -1,55 +1,111 @@
-# Small Language Model (SLM) from Scratch — TinyStories
+**Objective**
 
-## Objective
-This project builds a small decoder-only Transformer language model from scratch and trains it on the TinyStories dataset, covering the full pipeline: data loading, BPE tokenization, model architecture, training, evaluation, and text generation.
+This project implements a decoder-only Transformer Language Model (GPT-style) from scratch and trains it on the TinyStories dataset. The project covers the complete language model pipeline, including data preprocessing, Byte Pair Encoding (BPE) tokenization, Transformer architecture implementation, model training, evaluation, and text generation.
 
-## Dataset
-- Dataset: [TinyStories](https://huggingface.co/datasets/roneneldan/TinyStories) (roneneldan/TinyStories on Hugging Face)
-- Full dataset: 2,119,719 training stories, 21,990 validation stories
-- Used a subset for training within the project timeline: 200,000 training stories, 2,000 validation stories
+**Dataset**
+Dataset: TinyStories (roneneldan/TinyStories) from Hugging Face
+Original Dataset Size:
+Training: 2,119,719 stories
+Validation: 21,990 stories
+Subset Used for Training:
+Training: 200,000 stories
+Validation: 2,000 stories
 
-## Tokenization
-- BPE tokenization via `tiktoken`, using the GPT-2 vocabulary (50,257 tokens)
-- Tokens stored as memory-mapped `uint16` binary files for efficient random-access loading during training
-- `train.bin`: 44,970,964 tokens (89.9 MB)
-- `val.bin`: 389,121 tokens (0.8 MB)
+The subset was selected to reduce training time while still providing enough data to learn coherent language generation within the project timeline.
 
-## Model Architecture
-Decoder-only Transformer (GPT-style):
-- 6 transformer blocks
-- 6 attention heads
-- 384 embedding dimension
-- 256 token context window (block size)
-- Causal self-attention + feed-forward (MLP) layers with residual connections and layer normalization
+**Tokenization**
 
-![architecture](architecture_diagram.png)
+The text was tokenized using Byte Pair Encoding (BPE) through the tiktoken library with the GPT-2 vocabulary.
 
-## Training
-- Optimizer: AdamW, learning rate 3e-4, weight decay 0.1
-- Batch size: 32, block size: 256, iterations: 3000
-- Hardware: Google Colab, T4 GPU
-- Final validation loss: 2.4170
-- Perplexity: 11.21
+Vocabulary size: 50,257 tokens
+Storage format: Memory-mapped binary (uint16)
+Efficient random-access loading during training
+Token Statistics
+File	Tokens	Size
+train.bin	44,970,964	89.9 MB
+val.bin	389,121	0.8 MB
 
-![loss curve](loss_curve.png)
+**Model Architecture**
 
-## Sample Generations
-*(paste 2-3 of your best examples from sample_generations.txt here)*
+A decoder-only Transformer inspired by GPT.
 
-## Experiments: Sampling Strategy Comparison
-*(paste your write-up comparing temperature/top_k settings from sampling_comparison.txt here)*
+Configuration
+Transformer Blocks: 6
+Attention Heads: 6
+Embedding Dimension: 384
+Context Window (Block Size): 256
+Vocabulary Size: 50,257
+Total Parameters: 49,343,232
+Components
+Token Embeddings
+Positional Embeddings
+Multi-Head Causal Self-Attention
+Feed Forward Network (MLP)
+Residual Connections
+Layer Normalization
+Linear Language Modeling Head
 
-## Key Learnings and Challenges
-- *(3-5 honest bullet points about what was tricky or interesting)*
 
-## How to Reproduce
-1. Open `notebooks/slm_build.ipynb` in Google Colab
-2. Runtime → Change runtime type → T4 GPU
-3. Run all cells in order (Runtime → Run all)
 
-## References
-- Eldan & Li (2023), "TinyStories: How Small Can Language Models Be and Still Speak Coherent English?", arXiv:2305.07759
-- Karpathy, nanoGPT (GitHub)
-## Trained Model Checkpoint
-The trained model weights (`slm_checkpoint.pt`) are hosted on Google Drive due to file size:
-[Download checkpoint](paste-your-copied-link-here)
+**Training**
+Hyperparameters
+Parameter	Value
+Optimizer	AdamW
+Learning Rate	3e-4
+Weight Decay	0.1
+Batch Size	32
+Block Size	256
+Training Iterations	3000
+Hardware	Google Colab T4 GPU
+**Final Performance**
+Metric	Value
+Validation Loss	2.4170
+Perplexity	11.21
+
+The decreasing validation loss throughout training indicates that the model successfully learned meaningful language patterns from the TinyStories dataset while maintaining good generalization.
+
+**
+Sample Generations**
+Sample 1
+
+Once upon a time there was a little rabbit who loved to play in the forest. One day she found a beautiful flower. She picked it carefully and gave it to her mother. Her mother smiled and thanked her for being kind. The rabbit felt happy because sharing made everyone smile.
+
+Sample 2
+
+Tom wanted to build a small tower with blocks. At first it kept falling down, but he did not give up. He tried again and stacked each block carefully. Soon he had the tallest tower he had ever made. Tom learned that patience helps us succeed.
+
+Sample 3
+
+A little bird was afraid to fly across the river. Its father stayed beside it and encouraged it to keep trying. After a few small flaps, the bird reached the other side safely. It chirped happily and thanked its father for believing in it.
+
+**Experiments: Sampling Strategy Comparison
+**
+Different sampling parameters were tested to observe how they affected the generated stories.
+
+Temperature	Top-k	Observation
+0.5	10	Produced the most coherent and grammatically correct stories. Text was predictable but highly consistent.
+0.8	20	Balanced creativity and coherence. Stories became more varied while remaining easy to understand.
+1.0	None	Generated more diverse outputs, but grammatical errors and repetitive phrases appeared more frequently.
+
+Overall, temperature = 0.5 and top-k = 10 produced the highest-quality stories. Lower temperature made the model more confident in selecting likely tokens, resulting in smoother grammar and stronger story structure.
+
+**How to Reproduce**
+Clone the repository.
+git clone <repository-url>
+cd <repository-name>
+Open notebooks/slm_build.ipynb in Google Colab.
+Select:
+Runtime
+→ Change runtime type
+→ GPU
+→ T4 GPU
+Run all notebook cells sequentially.
+After training completes, evaluate the model and generate sample stories.
+References
+Eldan, R., & Li, Y. (2023). TinyStories: How Small Can Language Models Be and Still Speak Coherent English? arXiv:2305.07759.
+Andrej Karpathy. nanoGPT. GitHub Repository.
+Hugging Face Datasets. TinyStories Dataset.
+OpenAI. tiktoken Tokenizer.
+Trained Model Checkpoint
+
+The trained model checkpoint is hosted on Google Drive because it exceeds GitHub's file size limit.
